@@ -23,8 +23,8 @@ Congfig = importlib.import_module("detectors.Visual.UIED-master.config.CONFIG_UI
 
 def RunDetectors(data_folder):
 	print(">> Extracting Path\n")
-	txt = open("AccessibilityReportTEXT.txt", "a")
-	txt = open("predictions2.txt", "a")
+	txt = open("/output/AccessibilityReport.txt", "a")
+	# txt = open("predictions2.txt", "a")
 	file_extensions = ['.png', '.xml']
 	files = []
 	print(">> Getting Files and Screenshots\n")
@@ -44,7 +44,7 @@ def RunDetectors(data_folder):
 
 
 	model = {}
-	with open("....txt", 'r', encoding='utf-8') as file:
+	with open("/code/glove.6B.100d.txt", 'r', encoding='utf-8') as file:
 		for line in file:
 			parts = line.split()
 			word = parts[0]
@@ -69,6 +69,19 @@ def RunDetectors(data_folder):
 			touchText = "Touch Target Detector>> "  + "Interactive Elements: " + str(touchTarget[1]) + " | Violating Elements: " + str(touchTarget[0]) + "\n"
 			print(touchText)  
 			txt.write(touchText + '\n')  
+
+			# display xml code snippet for interactive elements
+			if touchTarget[1] > 0:
+				print("===== Interactive Elements =====")
+
+				for index, elem in enumerate(touchTarget[3]):
+					if elem[1] == 0:
+						print("Interactive Element #" + str(index+1) + ": \n" + str(elem[0]) + "\n")
+						txt.write("Interactive Element #" + str(index+1) + ": \n" + str(elem[0]) + "\n")
+					elif elem[1] == 1:
+						print("Interactive Element #" + str(index+1) + ": \n**[VIOLATION]** " + str(elem[0]) + "\n")
+						txt.write("Interactive Element #" + str(index+1) + ": \n**[VIOLATION]** " + str(elem[0]) + "\n")
+				print("\n")
 
 			print("===== Running Expanding Elements =====")
 			expanding = detectClosure(image, xml, glove_model_array)
@@ -104,7 +117,7 @@ def RunDetectors(data_folder):
 	txt.close()
 
 # set the path to the directory of the Miracle Project
-MotorEase_PATH = ".../"
+MotorEase_PATH = "/"
 os.chdir(MotorEase_PATH)
 
 

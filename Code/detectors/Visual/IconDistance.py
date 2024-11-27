@@ -123,7 +123,7 @@ def getDistance(screenshot_path, xml_path):
 						#print(bounds)
 						im1 = im.crop((bounds[0][0]-15, bounds[0][1]-15, bounds[1][0]+15, bounds[1][1]+15))
 						
-						savePath = "./Code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1])
+						savePath = "/code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1])
 						im1.save(savePath)
 						im1.close()
 						# print(is_single_color_image(savePath))
@@ -131,12 +131,12 @@ def getDistance(screenshot_path, xml_path):
 						if len(extractedText) > 10 and is_single_color_image(savePath) == False:
 							foobar.runSingle(savePath)
 							os.remove(savePath)
-							for root, dirs, files_in_dir in os.walk("./Code/detectors/Visual/UIED-master/data/output/ip/"):
+							for root, dirs, files_in_dir in os.walk("/code/detectors/Visual/UIED-master/data/output/ip/"):
 								for file_name in files_in_dir:
 									if ".json" in file_name:
 										data = []
 										#print(file_name)
-										with open("./Code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file:
+										with open("/code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file:
 											data = json.load(file)
 										for i in range(len(data["compos"])):
 											height = data["compos"][i]['height']
@@ -154,8 +154,8 @@ def getDistance(screenshot_path, xml_path):
 												bounding_boxes.append(newBox)
 												break
 						im.close()
-					except: 
-						print('ERROR')
+					except Exception as e: 
+						print('ERROR: ' + str(e))
 						continue
 					
 
