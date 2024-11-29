@@ -37,7 +37,8 @@ def plot_violations(x, y):
     plt.title('MotorEase Violations')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('/MotorEase-main/violations_graph.png')  # Save the graph as 'violations_graph.png'
+    plt.savefig('violations_graph.png')  # Save the graph as 'violations_graph.png'
+    #plt.savefig('/MotorEase-main/violations_graph.png') # Docker method
 
 def RunDetectors(data_folder):
 	x = []
@@ -64,12 +65,20 @@ def RunDetectors(data_folder):
 
 
 	model = {}
-	with open("/MotorEase-main/embeddings/glove.6B.100d.txt", 'r', encoding='utf-8') as file:
+	with open("/Code/glove.6B.100d.txt", 'r', encoding='utf-8') as file:
 		for line in file:
 			parts = line.split()
 			word = parts[0]
 			vector = [float(x) for x in parts[1:]]  # Convert string components to floats
 			model[word] = vector
+
+	# Docker Method
+	# with open("/MotorEase-main/embeddings/glove.6B.100d.txt", 'r', encoding='utf-8') as file:
+	# 	for line in file:
+	# 		parts = line.split()
+	# 		word = parts[0]
+	# 		vector = [float(x) for x in parts[1:]]  # Convert string components to floats
+	# 		model[word] = vector
 	
 	glove_model_array = model
 
@@ -128,7 +137,8 @@ def RunDetectors(data_folder):
 	plot_violations(x, y)
 
 # set the path to the directory of the Miracle Project
-MotorEase_PATH = "/MotorEase-main/"
+MotorEase_PATH = "/"
+#MotorEase_PATH = "/MotorEase-main/" #Docker method
 os.chdir(MotorEase_PATH)
 
 
