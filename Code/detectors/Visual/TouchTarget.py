@@ -132,16 +132,16 @@ def checkTouchTarget(screenshot_path, xml_path, min_size=(48, 48)):
 						
 						im1 = im.crop((bounds[0][0]-15, bounds[0][1]-15, bounds[1][0]+15, bounds[1][1]+15))
 						
-						savePath = "/code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1])
+						savePath = "/MotorEase-main/Code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1])
 						im1 = im1.save(savePath)
 						foobar.runSingle(savePath)
 						os.remove(savePath)
-						for root, dirs, files_in_dir in os.walk("/code/detectors/Visual/UIED-master/data/output/ip/"):
+						for root, dirs, files_in_dir in os.walk("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/"):
 							for file_name in files_in_dir:
 								if ".json" in file_name:
 									data = []
 									#print(file_name)
-									with open("/code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file:
+									with open("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file:
 										data = json.load(file)
 									for i in range(len(data["compos"])):
 										height = data["compos"][i]['height']
@@ -159,9 +159,9 @@ def checkTouchTarget(screenshot_path, xml_path, min_size=(48, 48)):
 										#print(nonViolations)
 
 									if "DS_Store" not in file_name:
-										os.remove("/code/detectors/Visual/UIED-master/data/output/ip/" + file_name)
+										os.remove("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name)
 								else:
-									os.remove("/code/detectors/Visual/UIED-master/data/output/ip/" +file_name)
+									os.remove("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/" +file_name)
 		return([violations, violations+nonViolations, xml_path, interactiveElements])
 									
 										
