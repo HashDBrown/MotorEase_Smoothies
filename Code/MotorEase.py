@@ -9,6 +9,7 @@ from detectors.Motor.Closure import detectClosure
 from detectors.Motor.patternMatching.pattern_matching import *
 from detectors.Motor.persistentElements import *
 from detectors.Motor.persistentElements import PersistentDriver
+import matplotlib.pyplot as plt
 import pickle
 from numpy import asarray
 
@@ -21,9 +22,29 @@ Compo = importlib.import_module("detectors.Visual.UIED-master.detect_compo.lib_i
 ip = importlib.import_module("detectors.Visual.UIED-master.detect_compo.ip_region_proposal")
 Congfig = importlib.import_module("detectors.Visual.UIED-master.config.CONFIG_UIED")
 
+def plot_violations(x, y):
+    """
+    Plots the violations against screenshots and saves the plot to a file.
+    
+    Args:
+    - x: List of screenshot names.
+    - y: List of violations corresponding to the screenshots.
+    """
+    print(">> Plotting Data")
+    plt.plot(x, y, marker='o')
+    plt.xlabel('Screenshots')
+    plt.ylabel('Violations')
+    plt.title('MotorEase Violations')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.savefig('violations_graph.png')  # Save the graph as 'violations_graph.png'
+    #plt.savefig('/MotorEase-main/violations_graph.png') # Docker method
+
 def RunDetectors(data_folder):
+	x = []
+	y = []
 	print(">> Extracting Path\n")
-	txt = open("/output/AccessibilityReport.txt", "a")
+	txt = open("AccessibilityReport.txt", "a")
 	# txt = open("predictions2.txt", "a")
 	file_extensions = ['.png', '.xml']
 	files = []
@@ -44,12 +65,20 @@ def RunDetectors(data_folder):
 
 
 	model = {}
-	with open("/code/glove.6B.100d.txt", 'r', encoding='utf-8') as file:
+	with open("/Code/glove.6B.100d.txt", 'r', encoding='utf-8') as file:
 		for line in file:
 			parts = line.split()
 			word = parts[0]
 			vector = [float(x) for x in parts[1:]]  # Convert string components to floats
 			model[word] = vector
+
+	# Docker Method
+	# with open("/MotorEase-main/embeddings/glove.6B.100d.txt", 'r', encoding='utf-8') as file:
+	# 	for line in file:
+	# 		parts = line.split()
+	# 		word = parts[0]
+	# 		vector = [float(x) for x in parts[1:]]  # Convert string components to floats
+	# 		model[word] = vector
 	
 	glove_model_array = model
 
@@ -61,6 +90,7 @@ def RunDetectors(data_folder):
 			xml = files[i] + ".xml"  
 			txt.write("============================================\n")
 			txt.write('FILENAME: ' + image.split('/')[-1] + "\n")
+			x.append(image.split('/')[-1])
 
 			print("_______Analyzing Next File______")
 
@@ -69,19 +99,7 @@ def RunDetectors(data_folder):
 			touchText = "Touch Target Detector>> "  + "Interactive Elements: " + str(touchTarget[1]) + " | Violating Elements: " + str(touchTarget[0]) + "\n"
 			print(touchText)  
 			txt.write(touchText + '\n')  
-
-			# display xml code snippet for interactive elements
-			if touchTarget[1] > 0:
-				print("===== Interactive Elements =====")
-
-				for index, elem in enumerate(touchTarget[3]):
-					if elem[1] == 0:
-						print("Interactive Element #" + str(index+1) + ": \n" + str(elem[0]) + "\n")
-						txt.write("Interactive Element #" + str(index+1) + ": \n" + str(elem[0]) + "\n")
-					elif elem[1] == 1:
-						print("Interactive Element #" + str(index+1) + ": \n**[VIOLATION]** " + str(elem[0]) + "\n")
-						txt.write("Interactive Element #" + str(index+1) + ": \n**[VIOLATION]** " + str(elem[0]) + "\n")
-				print("\n")
+			y.append(touchTarget[0])
 
 			print("===== Running Expanding Elements =====")
 			expanding = detectClosure(image, xml, glove_model_array)
@@ -116,12 +134,15 @@ def RunDetectors(data_folder):
 
 	txt.close()
 
+	plot_violations(x, y)
+
 # set the path to the directory of the Miracle Project
 MotorEase_PATH = "/"
+#MotorEase_PATH = "/MotorEase-main/" #Docker method
 os.chdir(MotorEase_PATH)
 
 
-AppPath = MotorEase_PATH + 'data'
+AppPath = MotorEase_PATH + 'Data/'
 RunDetectors(AppPath) 
 
 
