@@ -22,6 +22,12 @@ Compo = importlib.import_module("detectors.Visual.UIED-master.detect_compo.lib_i
 ip = importlib.import_module("detectors.Visual.UIED-master.detect_compo.ip_region_proposal")
 Congfig = importlib.import_module("detectors.Visual.UIED-master.config.CONFIG_UIED")
 
+def shorten_file_name(file_name):
+	#parse name by '_' and concat [0] and [3]
+	#return the shortened name
+	name = file_name.split('_')
+	return name[0] + '_' + name[3]
+
 def plot_violations(x, y):
     """
     Plots the violations against screenshots and saves the plot to a file.
@@ -31,6 +37,7 @@ def plot_violations(x, y):
     - y: List of violations corresponding to the screenshots.
     """
     print(">> Plotting Data")
+    plt.figure(figsize=(10, 8))
     plt.plot(x, y, marker='o')
     plt.xlabel('Screenshots')
     plt.ylabel('Violations')
@@ -90,7 +97,8 @@ def RunDetectors(data_folder):
 			xml = files[i] + ".xml"  
 			txt.write("============================================\n")
 			txt.write('FILENAME: ' + image.split('/')[-1] + "\n")
-			x.append(image.split('/')[-1])
+			fileName = shorten_file_name(image.split('/')[-1])
+			x.append(fileName)
 
 			print("_______Analyzing Next File______")
 
