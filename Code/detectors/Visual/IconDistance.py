@@ -198,7 +198,8 @@ def getDistance(screenshot_path, xml_path):
                         im1 = im.crop((bounds[0][0]-15, bounds[0][1]-15, bounds[1][0]+15, bounds[1][1]+15))
 
                         # Save the cropped image for further processing
-                        savePath = "/code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1])
+                        savePath = "/Code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1])
+						#savePath = "/MotorEase-main/Code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1]) #Docker method
                         im1.save(savePath)  # Save the cropped image
                         im1.close()  # Close the cropped image object
 
@@ -211,11 +212,13 @@ def getDistance(screenshot_path, xml_path):
                             os.remove(savePath)  # Remove the processed cropped image file
 
                             # Process extracted UI components from the analyzed image
-                            for root, dirs, files_in_dir in os.walk("/code/detectors/Visual/UIED-master/data/output/ip/"):
+                            for root, dirs, files_in_dir in os.walk("/Code/detectors/Visual/UIED-master/data/output/ip/"):
+							#for root, dirs, files_in_dir in os.walk("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/"): #Docker method
                                 for file_name in files_in_dir:
                                     if ".json" in file_name:  # Look for JSON files
                                         data = []
-                                        with open("/code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file:
+                                        with open("/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file:
+										#with open("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file: #Docker method
                                             data = json.load(file)  # Load the JSON data
 
                                         # Adjust bounding boxes for each detected UI component
@@ -264,6 +267,7 @@ def getDistance(screenshot_path, xml_path):
             return 1  # Indicate valid unique distances detected
         else:
             return 0  # No valid unique distances detected or exceeded the threshold
+
 
 
 
