@@ -22,28 +22,30 @@ Compo = importlib.import_module("detectors.Visual.UIED-master.detect_compo.lib_i
 ip = importlib.import_module("detectors.Visual.UIED-master.detect_compo.ip_region_proposal")
 Congfig = importlib.import_module("detectors.Visual.UIED-master.config.CONFIG_UIED")
 
-def shorten_file_name(file_name):
-	#parse name by '_' and concat [0] and [3]
-	#return the shortened name
-	name = file_name.split('_')
-	return name[0] + '_' + name[3]
+# def shorten_file_name(file_name):
+# 	#parse name by '_' and concat [0] and [3]
+# 	#return the shortened name
+# 	name = file_name.split('_')
+# 	return name[0] + '_' + name[3]
 
 def plot_violations(x, y):
     """
-    Plots the violations against screenshots and saves the plot to a file.
+    Plots the violations against screenshots as a bar graph and saves the plot to a file.
     
     Args:
     - x: List of screenshot names.
     - y: List of violations corresponding to the screenshots.
     """
     print(">> Plotting Data")
-    plt.figure(figsize=(10, 8))
-    plt.plot(x, y, marker='o')
-    plt.xlabel('Screenshots')
-    plt.ylabel('Violations')
-    plt.title('MotorEase Violations')
-    plt.xticks(rotation=45, ha='right')
+    plt.figure(figsize=(12, 8))
+    plt.bar(x, y, color='skyblue', edgecolor='black', width=0.6)
+    plt.xlabel('Screenshots', fontsize=12)
+    plt.ylabel('Violations', fontsize=12)
+    plt.title('MotorEase Violations per Screenshot', fontsize=14)
+    plt.xticks(rotation=45, ha='right', fontsize=10)
+    plt.yticks(fontsize=10)
     plt.tight_layout()
+
     plt.savefig('violations_graph.png')  # Save the graph as 'violations_graph.png'
     #plt.savefig('/MotorEase-main/violations_graph.png') # Docker method
 
@@ -97,8 +99,7 @@ def RunDetectors(data_folder):
 			xml = files[i] + ".xml"  
 			txt.write("============================================\n")
 			txt.write('FILENAME: ' + image.split('/')[-1] + "\n")
-			fileName = shorten_file_name(image.split('/')[-1])
-			x.append(fileName)
+			x.append(image.split('/')[-1])
 
 			print("_______Analyzing Next File______")
 
