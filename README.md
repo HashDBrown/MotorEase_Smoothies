@@ -32,7 +32,7 @@ The MotorEase code and data has been permanently archived on Zenodo at: (https:/
 
 <ins> Build 1: Running the Image with Local Build: </ins>
 
-- With these instructions you will be able to run the Docker Image locally and propagate your changes to the Docker Container automatically. These set of instructions are for Windows WSL. 
+- With these instructions, you will be able to run the Docker Image locally and propagate your changes to the Docker Container automatically. These set of instructions are for Windows WSL. 
 
 - This build uses the: glove.6B.100d from ```https://github.com/stanfordnlp/GloVe?tab=readme-ov-file#download-pre-trained-word-vectors```so please download the glove embedding here if you would like to use the same model.
   - Other models can be used and to use those models please change line 47 in Code/MotorEase.py .
@@ -66,19 +66,73 @@ docker run -it --rm -v $(pwd)/Data:/data -v $(pwd)/Code:/code -v $(pwd)/Output:/
 
 <ins> Build 2: Running the Image within Docker: </ins>
 
-- These set of instructions are meant for WSL, however, it can be used for PowerShell if you remove the ```$(pwd)``` for it to work.
+***Step 1: Run the Docker Image***
 
-- Step 1: To the image on the container, run this command and be sure to use the correct "amd" or "arm" image name in this command.
- ```bash
-  docker run -it --rm -v $(pwd)/container_files:/container_files itsarunkv/motorease-arm /bin/bash 
-  ``` 
-This command will allow you to enter the container and use it as a terminal. This will allow you to run ```wget``` commands to download data to the container and modify any existing data within. 
+- Use the following commands based on your platform. This command links the local `Code`, `Data`, and `embeddings` directories to the Docker container, ensuring changes in these directories reflect in the container.
 
-- Step 2: To run the project enter ```Code``` directory and run:
+**MacOS/Linux**:
+```bash
+docker run -it -v $(pwd)/Code:/MotorEase-main/Code -v $(pwd)/embeddings:/MotorEase-main/embeddings -v $(pwd)/Data:/MotorEase-main/Data itsarunkv/motorease-arm /bin/bash
+```
+ 
+**PowerShell**:
+```bash
+docker run -it -v ${PWD}/Code:/MotorEase-main/Code -v ${PWD}/embeddings:/MotorEase-main/embeddings -v ${PWD}/Data:/MotorEase-main/Data itsarunkv/motorease-amd /bin/bash
+``` 
+
+**Command Prompt**:
+```bash
+docker run -it -v %CD%\Code:/MotorEase-main/Code -v %CD%\embeddings:/MotorEase-main/embeddings -v %CD%\Data:/MotorEase-main/Data itsarunkv/motorease-amd /bin/bash
+```
+
+- **Note**: Replace itsarunkv/motorease-arm with itsarunkv/motorease-amd if using an AMD-based system.
+
+- Now, any change in the `Data`, `Code`, and `embeddings` directories will show in the Docker container.
+
+- ***To test your data, just add the PNG and corresponding XML file to the `Data` folder.***
+
+***Step 2: Update the Scripts***
+- Uncomment the Docker method code in each of these files:
+  - `MotorEase.py`
+  - `TouchTarget.py`
+  - `IconDistance.py`
+  - `run_Single.py`
+
+- Look for the *"Docker method"* comments in each file and uncomment those sections while commenting out the original method.
+  
+***Step 3: Add the GloVe Embeddings Path***
+- Navigate to line 68 in `MotorEase.py` and add the file path for your Glove Embeddings txt file.
+- MotorEase requires glove embeddings to work and needs the download for the model. The model is large and not able to be hosted on GitHub. Please visit https://nlp.stanford.edu/projects/glove/ and download 1 of the 4 available options. 
+
+***Step 4: Install Dependencies***
+
+- Once inside the container, install `matplotlib` using pip:
+```bash
+pip install matplotlib
+```
+
+***Step 5: Run the Project***
+
+- Enter the `Code` directory in the container and run:
 ```bash
  python3 MotorEase.py 
 ```
-The python script will run and will take the data from the Data folder and the GloVe embeddings from the sampleGlove.txt file. The program will run and notify the user at every stage. Finally, the logs will show that an accessibility report has been generated, and can be viewed. They can be viewed in the AccessibilityReport.txt file. 
+The script will:
+  1. Process data from the `Data` folder.
+  2. Use the GloVe embeddings file specified on line 68.
+  3. Generate an accessibility report and a violations graph:
+     - `AccessibilityReport.txt`
+     - `violations_graph.png`
+
+***Step 6: Copy Output Files to Local Machine***
+- Exit the container:
+    ```bash
+    exit
+- Copy the output files to you local directory:
+    ```bash
+    docker cp {container_id}:/MotorEase-main/AccessibilityReport.txt Results/
+    docker cp {container_id}:/MotorEase-main/violations_graph.png Results/
+    ```
 
 - ALTERNATIVE WAY: Simply run the command below to run it in the Docker.
 ```bash
@@ -130,7 +184,7 @@ pip install -r Code/requirements.txt
 
 - GloVe embeddings used: ```wget https://nlp.stanford.edu/data/glove.42B.300d.zip```
 
-- Please sneure that the Glove embedding is downloaded to the /MotorEase-main/Code/ folder. When you download your GloVe embedding file, rename it to sampleGlove.txt and delete the placeholder sampleGlove.txt file so that the code can use the real embeddings. The resulting file path for the GloVe embedding file should be: ```/MotorEase-main/Code/gloveSample.txt```
+- Please ensure that the Glove embedding is downloaded to the /MotorEase-main/Code/ folder. When you download your GloVe embedding file, rename it to sampleGlove.txt and delete the placeholder sampleGlove.txt file so that the code can use the real embeddings. The resulting file path for the GloVe embedding file should be: ```/MotorEase-main/Code/gloveSample.txt```
 
 - In order to load your own images, navigate to the Data folder in the container and delete the existing photos. Use the wget command to download your images into the directory so they may be used. 
 
