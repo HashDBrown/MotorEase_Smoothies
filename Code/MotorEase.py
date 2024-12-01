@@ -51,8 +51,8 @@ def plot_violating(x, y):
     
     plt.tight_layout()
 
-    plt.savefig('violating_graph.png')  # Save the graph as 'violations_graph.png'
-    #plt.savefig('/MotorEase-main/violations_graph.png') # Docker method
+    plt.savefig('violating_graph.png')  # Save the graph as 'violating_graph.png'
+    #plt.savefig('/MotorEase-main/violating_graph.png') # Docker method
     print("\nViolating Elements Graph Generated: violating_graph.png")
 
 def plot_interactive(x, y):
@@ -78,7 +78,7 @@ def plot_interactive(x, y):
     
     plt.tight_layout()
 
-    plt.savefig('interactive_graph.png')  # Save the graph as 'violations_graph.png'
+    plt.savefig('interactive_graph.png')  # Save the graph as 'interactive_graph.png'
     #plt.savefig('/MotorEase-main/interactive_graph.png') # Docker method
     print("\nIneractive Elements Graph Generated: interactive_graph.png")
 
@@ -117,7 +117,7 @@ def plot_comparison(x, y1, y2):
 
     plt.tight_layout()
 
-    plt.savefig('violating_vs_interactive.png')  # Save the graph as 'violations_graph.png'
+    plt.savefig('violating_vs_interactive.png')  # Save the graph as 'violating_vs_interactive.png'
     #plt.savefig('/MotorEase-main/violating_vs_interactive.png') # Docker method
     print("\nComparison Graph Generated: violating_vs_interactive.png")
 
