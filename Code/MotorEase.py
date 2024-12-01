@@ -75,6 +75,7 @@ def RunDetectors(data_folder):
 
 	model = {}
 	with open("/Code/glove.6B.100d.txt", 'r', encoding='utf-8') as file:
+	#with open("/ABSOLUTE/PATH/TO/glove.6B/glove.6B.100d.txt", 'r', encoding='utf-8') as file: #Python method
 		for line in file:
 			parts = line.split()
 			word = parts[0]
@@ -148,6 +149,7 @@ def RunDetectors(data_folder):
 # set the path to the directory of the Miracle Project
 MotorEase_PATH = "/"
 #MotorEase_PATH = "/MotorEase-main/" #Docker method
+#MotorEase_PATH = "/ABSOLUTE/PATH/TO//MotorEase_Smoothies/" #Python method
 os.chdir(MotorEase_PATH)
 
 
