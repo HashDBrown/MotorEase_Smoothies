@@ -66,6 +66,8 @@ docker run -it --rm -v $(pwd)/Data:/data -v $(pwd)/Code:/code -v $(pwd)/Output:/
 
 <ins> Build 2: Running the Image within Docker: </ins>
 
+[Video Tutorial](https://drive.google.com/file/d/1FKK-Hn-CGmNpBthx0Z-T0SHbMVoSUvEp/view?usp=drive_link)
+
 ***Step 1: Add the GloVe Embeddings Path***
 - Create an `embeddings` folder in the repository's root directory.
 - MotorEase requires glove embeddings to work and needs the download for the model. The model is large and not able to be hosted on GitHub. Please visit https://nlp.stanford.edu/projects/glove/ and download 1 of the 4 available options.
