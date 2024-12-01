@@ -74,6 +74,7 @@ docker run -it --rm -v $(pwd)/Data:/data -v $(pwd)/Code:/code -v $(pwd)/Output:/
 
 ***Step 2: Run the Docker Image***
 
+- Navigate to the root directory of `MotorEase_Smoothies`.
 - Use the following commands based on your platform. This command links the local `Code`, `Data`, and `embeddings` directories to the Docker container, ensuring changes in these directories reflect in the container.
 
 **MacOS/Linux**:
@@ -132,13 +133,17 @@ The script will:
 - Exit the container:
     ```bash
     exit
-- Copy the output files to your local directory:
+    ```
+  - This should now take you back to the root directory of MotorEase_Smoothies.
+- Create a `Results` folder in the repository's root directory.
+- Copy the output files to your `Results` folder in the local directory:
     ```bash
     docker cp {container_id}:/MotorEase-main/AccessibilityReport.txt Results/
     docker cp {container_id}:/MotorEase-main/violating_graph.png Results/
     docker cp {container_id}:/MotorEase-main/interactive_graph.png Results/
     docker cp {container_id}:/MotorEase-main/violating_vs_interactive.png Results/
     ```
+- Check the `Results` folder for these files.
 
 <ins> Build 3: Python Environment: </ins>
 
