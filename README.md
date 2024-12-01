@@ -144,33 +144,48 @@ The script will:
 
 - These set of instructions is if you would like to run the repository remotely using a Python Environment. 
 
-- Step 1: Go to line 107 in the MotorEase.py file and change the file path to the folder that holds the code and data folders
-  
-- Step 2: Go to line 47 and add the file path for your Glove Embeddings txt file. MotorEase requires glove embeddings to work, and needs the download for the model. The model is large and not able to be hosted on GitHub. Please visit https://nlp.stanford.edu/projects/glove/ and download 1 of the 4 available options.
+Versions compatible with MotorEase:
 - ```Python Version: 3.9.13```
 
 - ```Pip Version: 23.3.2```
 
-- Using Environment: The Code directory will have a requirements.txt file that lists all required packages for MotorEase to run. 
+***Step 1: Updating the paths***
 
-- Step 3: In your command line, create a new python environment:
+Go to line 151 in the Code/MotorEase.py file and change the file path to the folder that holds your Glove Embeddings txt file. MotorEase requires glove embeddings to work, and needs the download for the model. The model is large and not able to be hosted on GitHub. Please visit https://nlp.stanford.edu/projects/glove/ and download 1 of the 4 available options.
+
+Go to each of the following files: motorease.py, icondistance.py, touchtarget.py, run_single.py and update the paths to the path to MotorEase root directory. You can quickly find the changes needed by ctrl+f: "Python Method". Comment out the current paths and replace the commented out path's with MotorEase Path
+
+Files to be updated:
+- `Code/MotorEase.py`: 2 paths 
+- `Code/detectors/Visual/IconDistance.py`: 3 paths
+- `Code/detectors/Visual/TouchTarget.py`: 5 paths
+- `Code/detectors/Visual/UIED-master/run_single.py`: 1 path
+
+**NOTE:** Using Environment: The Code directory will have a requirements.txt file that lists all required packages for MotorEase to run. 
+
+***Step 2: creating a new python environment***
  ```bash
  python3 -m venv .venv
  ``` 
-- Step 4: Once your environment is created, activate it with this command:
+***Step 3: Once your environment is created, activate it with this command:***
  ```bash
  source .venv/bin/activate
  ```
-- Step 5: Use this command to download all of the dependencies into your virtual environment:  
+***Step 4: Use this command to download all of the dependencies into your virtual environment:***
 ```bash
 pip install -r Code/requirements.txt
 ``` 
-- Step 6: Once the requirements are installed and there are PNG and XML files in the Data folder, run MotorEase using this command:
+***Step 5: Once the requirements are installed and there are PNG and XML files in the Data folder, run MotorEase from the Code directory using this command:***
  ```bash
+ cd Code/
  python3 MotorEase.py
  ```
   
 - The output of either method will be a file with the Motor impairment accessibility guideline violations, AccessibilityReport.txt
+- The Graphed Data from the accessibility report is generated in 3 differnet Bar Graphs:
+     - violating_graph.png
+     - interactive_graph.png
+     - violating_vs_interactive.png
   
 - If you would like to run MotorEase on your own screenshot/xml pair, remove existing data in the data folder and add PNG screenshots and their XML files from a single
   application.
