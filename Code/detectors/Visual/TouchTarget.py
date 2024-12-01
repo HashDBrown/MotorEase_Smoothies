@@ -134,11 +134,13 @@ def checkTouchTarget(screenshot_path, xml_path, min_size=(48, 48)):
 						
 						savePath = "/Code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1])
 						#savePath = "/MotorEase-main/Code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1]) #Docker method
+						#savePath = "/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/Input/" + str(screenshot_path.split('/')[-1]) #Python method
 						im1 = im1.save(savePath)
 						foobar.runSingle(savePath)
 						os.remove(savePath)
 						for root, dirs, files_in_dir in os.walk("/Code/detectors/Visual/UIED-master/data/output/ip/"):
 						#for root, dirs, files_in_dir in os.walk("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/"): #Docker method
+						#for root, dirs, files_in_dir in os.walk("/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/ip/"): #Python method
 							for file_name in files_in_dir:
 								if ".json" in file_name:
 									data = []
@@ -146,6 +148,7 @@ def checkTouchTarget(screenshot_path, xml_path, min_size=(48, 48)):
 									
 									with open("/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file:
 									#with open("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file: #Docker method
+									#with open("/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file: #Python method
 										data = json.load(file)
 									for i in range(len(data["compos"])):
 										height = data["compos"][i]['height']
@@ -165,9 +168,11 @@ def checkTouchTarget(screenshot_path, xml_path, min_size=(48, 48)):
 									if "DS_Store" not in file_name:
 										os.remove("/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name)
 										#os.remove("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name) #Docker method
+										#os.remove("/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name) #Python method
 								else:
-									os.remove("/Code/detectors/Visual/UIED-master/data/output/ip/" +file_name)
+									os.remove("/Volumes/MyPassport/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/ip/" +file_name)
 									#os.remove("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/" +file_name) #Docker method
+									#os.remove("/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/ip/" +file_name) #Python method
 		return([violations, violations+nonViolations, xml_path, interactiveElements])
 									
 										
