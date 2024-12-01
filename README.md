@@ -122,9 +122,9 @@ pip install matplotlib
 The script will:
   1. Process data from the `Data` folder.
   2. Use the GloVe embeddings file specified on line 68.
-  3. Generate an accessibility report and a violations graph:
+  3. Generate an accessibility report and bar graphs for interactive and violating elements:
      - `AccessibilityReport.txt`
-     - `violations_graph.png`
+     - `violating_graph.png`
      - `interactive_graph.png`
      - `violating_vs_interactive.png`
 
@@ -135,7 +135,7 @@ The script will:
 - Copy the output files to your local directory:
     ```bash
     docker cp {container_id}:/MotorEase-main/AccessibilityReport.txt Results/
-    docker cp {container_id}:/MotorEase-main/violations_graph.png Results/
+    docker cp {container_id}:/MotorEase-main/violating_graph.png Results/
     docker cp {container_id}:/MotorEase-main/interactive_graph.png Results/
     docker cp {container_id}:/MotorEase-main/violating_vs_interactive.png Results/
     ```
