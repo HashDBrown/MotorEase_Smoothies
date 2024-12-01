@@ -28,30 +28,103 @@ Congfig = importlib.import_module("detectors.Visual.UIED-master.config.CONFIG_UI
 # 	name = file_name.split('_')
 # 	return name[0] + '_' + name[3]
 
-def plot_violations(x, y):
+def plot_violating(x, y):
     """
     Plots the violations against screenshots as a bar graph and saves the plot to a file.
     
     Args:
     - x: List of screenshot names.
-    - y: List of violations corresponding to the screenshots.
+    - y: List of violating elements count corresponding to the screenshots.
     """
-    print(">> Plotting Data")
+    print("\n>> Plotting Violating Elements Data")
     plt.figure(figsize=(12, 8))
-    plt.bar(x, y, color='skyblue', edgecolor='black', width=0.6)
+    bars = plt.bar(x, y, color='skyblue', edgecolor='black', width=0.6)
     plt.xlabel('Screenshots', fontsize=12)
-    plt.ylabel('Violations', fontsize=12)
-    plt.title('MotorEase Violations per Screenshot', fontsize=14)
+    plt.ylabel('Number of Elements', fontsize=12)
+    plt.title('Violating Elements per Screenshot', fontsize=14)
     plt.xticks(rotation=45, ha='right', fontsize=10)
     plt.yticks(fontsize=10)
+
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width() / 2, height + 0.5, f'{int(height)}', ha='center', va='bottom', fontsize=10)
+    
     plt.tight_layout()
 
-    plt.savefig('violations_graph.png')  # Save the graph as 'violations_graph.png'
+    plt.savefig('violating_graph.png')  # Save the graph as 'violations_graph.png'
     #plt.savefig('/MotorEase-main/violations_graph.png') # Docker method
+    print("\nViolating Elements Graph Generated: violating_graph.png")
+
+def plot_interactive(x, y):
+    """
+    Plots the violations against screenshots as a bar graph and saves the plot to a file.
+    
+    Args:
+    - x: List of screenshot names.
+    - y: List of interactive elements count corresponding to the screenshots.
+    """
+    print("\n>> Plotting Interactive Elements Data")
+    plt.figure(figsize=(12, 8))
+    bars = plt.bar(x, y, color='orange', edgecolor='black', width=0.6)
+    plt.xlabel('Screenshots', fontsize=12)
+    plt.ylabel('Number of Elements', fontsize=12)
+    plt.title('Interactive Elements per Screenshot', fontsize=14)
+    plt.xticks(rotation=45, ha='right', fontsize=10)
+    plt.yticks(fontsize=10)
+    
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width() / 2, height + 0.5, f'{int(height)}', ha='center', va='bottom', fontsize=10)
+    
+    plt.tight_layout()
+
+    plt.savefig('interactive_graph.png')  # Save the graph as 'violations_graph.png'
+    #plt.savefig('/MotorEase-main/violations_graph.png') # Docker method
+    print("\nIneractive Elements Graph Generated: interactive_graph.png")
+
+def plot_comparison(x, y1, y2):
+    """
+    Plots the violations against screenshots as a bar graph and saves the plot to a file.
+    
+    Args:
+    - x: List of screenshot names.
+    - y1: List of violating elements count corresponding to the screenshots.
+	- y2: List of interactive elements count corresponding to the screenshots.
+    """
+    print("\n>> Plotting Both Data for comparison")
+    plt.figure(figsize=(12, 8))
+
+    bar_width = 0.4
+    bar_positions_violations = range(len(x))  # Positions for violations bars
+    bar_positions_interactive = [pos + bar_width for pos in bar_positions_violations]  # Offset positions for interactive elements
+
+    # Plot bars
+    bars_violations = plt.bar(bar_positions_violations, y1, color='skyblue', edgecolor='black', width=bar_width, label='Violating')
+    bars_interactive = plt.bar(bar_positions_interactive, y2, color='orange', edgecolor='black', width=bar_width, label='Interactive')
+
+    # Add labels, title, and legend
+    plt.xlabel('Screenshots', fontsize=12)
+    plt.ylabel('Number of Elements', fontsize=12)
+    plt.title('Violations Vs. Interactive Elements per Screenshot', fontsize=14)
+    plt.xticks([pos + bar_width / 2 for pos in bar_positions_violations], x, rotation=45, ha='right', fontsize=10)
+    plt.yticks(fontsize=10)
+    plt.legend(fontsize=12)
+
+    for bars in [bars_violations, bars_interactive]:
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(bar.get_x() + bar.get_width() / 2, height + 0.5, f'{int(height)}', ha='center', va='bottom', fontsize=10)
+
+    plt.tight_layout()
+
+    plt.savefig('violating_vs_interactive.png')  # Save the graph as 'violations_graph.png'
+    #plt.savefig('/MotorEase-main/violations_graph.png') # Docker method
+    print("\nComparison Graph Generated: violating_vs_interactive.png")
 
 def RunDetectors(data_folder):
-	x = []
-	y = []
+	files_list = []
+	violating_values = []
+	interactive_values = []
 	print(">> Extracting Path\n")
 	txt = open("AccessibilityReport.txt", "a")
 	# txt = open("predictions2.txt", "a")
@@ -100,7 +173,7 @@ def RunDetectors(data_folder):
 			xml = files[i] + ".xml"  
 			txt.write("============================================\n")
 			txt.write('FILENAME: ' + image.split('/')[-1] + "\n")
-			x.append(image.split('/')[-1])
+			files_list.append(image.split('/')[-1])
 
 			print("_______Analyzing Next File______")
 
@@ -109,7 +182,8 @@ def RunDetectors(data_folder):
 			touchText = "Touch Target Detector>> "  + "Interactive Elements: " + str(touchTarget[1]) + " | Violating Elements: " + str(touchTarget[0]) + "\n"
 			print(touchText)  
 			txt.write(touchText + '\n')  
-			y.append(touchTarget[0])
+			violating_values.append(touchTarget[0])
+			interactive_values.append(touchTarget[1])
 
 			print("===== Running Expanding Elements =====")
 			expanding = detectClosure(image, xml, glove_model_array)
@@ -141,15 +215,16 @@ def RunDetectors(data_folder):
 
 	txt.write(persistentText + '\n')
 	print("\nAccessibility Report Generated: AccessibilityReport.txt")
-
 	txt.close()
 
-	plot_violations(x, y)
+	plot_violating(files_list, violating_values)
+	plot_interactive(files_list, interactive_values)
+	plot_comparison(files_list, violating_values, interactive_values)
 
 # set the path to the directory of the Miracle Project
 MotorEase_PATH = "/"
 #MotorEase_PATH = "/MotorEase-main/" #Docker method
-#MotorEase_PATH = "/ABSOLUTE/PATH/TO//MotorEase_Smoothies/" #Python method
+#MotorEase_PATH = "/ABSOLUTE/PATH/TO/MotorEase_Smoothies/" #Python method
 os.chdir(MotorEase_PATH)
 
 

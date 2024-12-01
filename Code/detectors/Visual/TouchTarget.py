@@ -176,17 +176,24 @@ def checkTouchTarget(screenshot_path, xml_path, min_size=(48, 48)):
                         im1 = im.crop((bounds[0][0]-15, bounds[0][1]-15, bounds[1][0]+15, bounds[1][1]+15))
                         
                         savePath = "/Code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1])
+                        #savePath = "/MotorEase-main/Code/detectors/Visual/UIED-master/data/input/" + str(screenshot_path.split('/')[-1]) #Docker method
+						#savePath = "/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/Input/" + str(screenshot_path.split('/')[-1]) #Python method
                         im1 = im1.save(savePath)  
 						# Process the cropped image using an external function.
                         foobar.runSingle(savePath)  
 						 # Remove the cropped image file after processing.
                         os.remove(savePath) 
                         for root, dirs, files_in_dir in os.walk("/Code/detectors/Visual/UIED-master/data/output/ip/"):
+                        #for root, dirs, files_in_dir in os.walk("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/"): #Docker method
+						#for root, dirs, files_in_dir in os.walk("/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/ip/"): #Python method
+                        
                             # Traverse the output directory for processed files.
                             for file_name in files_in_dir:
                                 if ".json" in file_name:  
                                     data = []  
                                     with open("/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file:
+                                    #with open("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file: #Docker method
+									#with open("/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name, "r") as file: #Python method
                                         # Open the JSON file for reading.
                                         data = json.load(file)  
 									# Iterate through detected components in JSON.
@@ -206,10 +213,15 @@ def checkTouchTarget(screenshot_path, xml_path, min_size=(48, 48)):
                                     if "DS_Store" not in file_name:  
 										# Remove the processed JSON file.
                                         os.remove("/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name)
+                                        #os.remove("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name) #Docker method
+										#os.remove("/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name) #Python method
                                         
                                 else:
 									# Remove non-JSON files from the directory.
                                     os.remove("/Code/detectors/Visual/UIED-master/data/output/ip/" + file_name)
+                                    #os.remove("/MotorEase-main/Code/detectors/Visual/UIED-master/data/output/ip/" +file_name) #Docker method
+									#os.remove("/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/ip/" +file_name) #Python method
+
           # Return the count of violations, total elements, XML path, and interactive elements.                      
         return [violations, violations+nonViolations, xml_path, interactiveElements]
       
