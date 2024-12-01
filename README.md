@@ -66,7 +66,13 @@ docker run -it --rm -v $(pwd)/Data:/data -v $(pwd)/Code:/code -v $(pwd)/Output:/
 
 <ins> Build 2: Running the Image within Docker: </ins>
 
-***Step 1: Run the Docker Image***
+***Step 1: Add the GloVe Embeddings Path***
+- Create an `embeddings` folder in the repository's root directory.
+- MotorEase requires glove embeddings to work and needs the download for the model. The model is large and not able to be hosted on GitHub. Please visit https://nlp.stanford.edu/projects/glove/ and download 1 of the 4 available options.
+- Add the Glove Embedding of your choice to the `embeddings` folder you created earlier.
+- Navigate to line **151** in `MotorEase.py`, uncomment the line, update the txt file, and comment out the original line.
+
+***Step 2: Run the Docker Image***
 
 - Use the following commands based on your platform. This command links the local `Code`, `Data`, and `embeddings` directories to the Docker container, ensuring changes in these directories reflect in the container.
 
@@ -91,7 +97,7 @@ docker run -it -v %CD%\Code:/MotorEase-main/Code -v %CD%\embeddings:/MotorEase-m
 
 - ***To test your data, just add the PNG and corresponding XML file to the `Data` folder.***
 
-***Step 2: Update the Scripts***
+***Step 3: Update the Scripts***
 - Uncomment the Docker method code in each of these files:
   - `MotorEase.py`
   - `TouchTarget.py`
@@ -99,10 +105,6 @@ docker run -it -v %CD%\Code:/MotorEase-main/Code -v %CD%\embeddings:/MotorEase-m
   - `run_Single.py`
 
 - Look for the *"Docker method"* comments in each file and uncomment those sections while commenting out the original method.
-  
-***Step 3: Add the GloVe Embeddings Path***
-- Navigate to line 68 in `MotorEase.py` and add the file path for your Glove Embeddings txt file.
-- MotorEase requires glove embeddings to work and needs the download for the model. The model is large and not able to be hosted on GitHub. Please visit https://nlp.stanford.edu/projects/glove/ and download 1 of the 4 available options. 
 
 ***Step 4: Install Dependencies***
 
@@ -123,21 +125,20 @@ The script will:
   3. Generate an accessibility report and a violations graph:
      - `AccessibilityReport.txt`
      - `violations_graph.png`
+     - `interactive_graph.png`
+     - `violating_vs_interactive.png`
 
 ***Step 6: Copy Output Files to Local Machine***
 - Exit the container:
     ```bash
     exit
-- Copy the output files to you local directory:
+- Copy the output files to your local directory:
     ```bash
     docker cp {container_id}:/MotorEase-main/AccessibilityReport.txt Results/
     docker cp {container_id}:/MotorEase-main/violations_graph.png Results/
+    docker cp {container_id}:/MotorEase-main/interactive_graph.png Results/
+    docker cp {container_id}:/MotorEase-main/violating_vs_interactive.png Results/
     ```
-
-- ALTERNATIVE WAY: Simply run the command below to run it in the Docker.
-```bash
-docker run -it --rm -v $(pwd)/container_files:/container_files itsarunkv/motorease-arm
-```
 
 <ins> Build 3: Python Environment: </ins>
 

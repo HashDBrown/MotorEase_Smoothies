@@ -79,7 +79,7 @@ def plot_interactive(x, y):
     plt.tight_layout()
 
     plt.savefig('interactive_graph.png')  # Save the graph as 'violations_graph.png'
-    #plt.savefig('/MotorEase-main/violations_graph.png') # Docker method
+    #plt.savefig('/MotorEase-main/interactive_graph.png') # Docker method
     print("\nIneractive Elements Graph Generated: interactive_graph.png")
 
 def plot_comparison(x, y1, y2):
@@ -118,7 +118,7 @@ def plot_comparison(x, y1, y2):
     plt.tight_layout()
 
     plt.savefig('violating_vs_interactive.png')  # Save the graph as 'violations_graph.png'
-    #plt.savefig('/MotorEase-main/violations_graph.png') # Docker method
+    #plt.savefig('/MotorEase-main/violating_vs_interactive.png') # Docker method
     print("\nComparison Graph Generated: violating_vs_interactive.png")
 
 def RunDetectors(data_folder):
@@ -148,6 +148,7 @@ def RunDetectors(data_folder):
 
 	model = {}
 	with open("/Code/glove.6B.100d.txt", 'r', encoding='utf-8') as file:
+	#with open("/MotorEase-main/embeddings/glove.6B.100d.txt", 'r', encoding='utf-8') as file: #Docker method
 	#with open("/ABSOLUTE/PATH/TO/glove.6B/glove.6B.100d.txt", 'r', encoding='utf-8') as file: #Python method
 		for line in file:
 			parts = line.split()
@@ -155,14 +156,6 @@ def RunDetectors(data_folder):
 			vector = [float(x) for x in parts[1:]]  # Convert string components to floats
 			model[word] = vector
 
-	# Docker Method
-	# with open("/MotorEase-main/embeddings/glove.6B.100d.txt", 'r', encoding='utf-8') as file:
-	# 	for line in file:
-	# 		parts = line.split()
-	# 		word = parts[0]
-	# 		vector = [float(x) for x in parts[1:]]  # Convert string components to floats
-	# 		model[word] = vector
-	
 	glove_model_array = model
 
 	counter = 0
