@@ -59,7 +59,7 @@ def runSingle(imagePath):
     input_path_img = imagePath
     output_root = '/Code/detectors/Visual/UIED-master/data/output'
     #output_root = '/MotorEase-main/Code/detectors/Visual/UIED-master/data/output' # Docker method
-    #output_root = '/ABSOLUTE/PATH/TO/otorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/' #Python method
+    #output_root = '/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/' #Python method
 
     resized_height = resize_height_by_longest_edge(input_path_img, resize_length=800)
     color_tips()

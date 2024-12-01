@@ -1,0 +1,16 @@
+# Ignore virtual environments
+.venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore instant input/output files
+Code/detectors/Visual/UIED-master/data/output/ip
+Code/detectors/Visual/UIED-master/data/Input/*.png
+
+#ignore accessibility reports and graph
+AccessibilityReport.txt
+violating_graph.png
+interactive_graph.png
+violating_vs_interactive.png
