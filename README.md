@@ -70,7 +70,7 @@ docker run -it --rm -v $(pwd)/Data:/data -v $(pwd)/Code:/code -v $(pwd)/Output:/
 - Create an `embeddings` folder in the repository's root directory.
 - MotorEase requires glove embeddings to work and needs the download for the model. The model is large and not able to be hosted on GitHub. Please visit https://nlp.stanford.edu/projects/glove/ and download 1 of the 4 available options.
 - Add the Glove Embedding of your choice to the `embeddings` folder you created earlier.
-- Navigate to line **151** in `MotorEase.py`, uncomment the line, update the txt file, and comment out the original line.
+- Navigate to line **151** in `Code/MotorEase.py`, uncomment the line, update the txt file, and comment out the original line.
 
 ***Step 2: Run the Docker Image***
 
@@ -99,10 +99,10 @@ docker run -it -v %CD%\Code:/MotorEase-main/Code -v %CD%\embeddings:/MotorEase-m
 
 ***Step 3: Update the Scripts***
 - Uncomment the Docker method code in each of these files:
-  - `MotorEase.py`
-  - `TouchTarget.py`
-  - `IconDistance.py`
-  - `run_Single.py`
+  - `Code/MotorEase.py`
+  - `Code/detectors/Visual/TouchTarget.py`
+  - `Code/detectors/Visual/IconDistance.py`
+  - `Code/detectors/Visual/UIED-master/run_single.py`
 
 - Look for the *"Docker method"* comments in each file and uncomment those sections while commenting out the original method.
 
