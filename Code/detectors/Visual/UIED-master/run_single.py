@@ -26,6 +26,12 @@ def color_tips():
     cv2.putText(board, "Block", (10, 170), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
     cv2.imshow('colors', board)
 
+    # Docker method
+    # output_path = 'colors.png'
+    # cv2.imwrite(output_path, board)
+    # print(f"Saved color tips as {output_path}")
+
+
 
 def runSingle(imagePath):
 
@@ -51,7 +57,9 @@ def runSingle(imagePath):
 
     # set input image path
     input_path_img = imagePath
-    output_root = './Code/detectors/Visual/UIED-master/data/output'
+    output_root = '/Code/detectors/Visual/UIED-master/data/output'
+    #output_root = '/MotorEase-main/Code/detectors/Visual/UIED-master/data/output' # Docker method
+    #output_root = '/ABSOLUTE/PATH/TO/MotorEase_Smoothies/Code/detectors/Visual/UIED-master/data/output/' #Python method
 
     resized_height = resize_height_by_longest_edge(input_path_img, resize_length=800)
     color_tips()

@@ -12,7 +12,7 @@ The MotorEase code and data has been permanently archived on Zenodo at: (https:/
 
 ## Setup & Usage
 
-- There are 2 ways to build the project, using Docker (recommended) or a Python Environment
+- "There are three ways to build the project: using Docker within a container (recommended), building locally with Docker, or using a Python environment.
 
 <ins>Docker instructions: </ins>
 
@@ -30,13 +30,173 @@ The MotorEase code and data has been permanently archived on Zenodo at: (https:/
 
 - This project uses a GloVe embedding for textual similarities. However, GloVe embedding files are large and difficult to host on GitHub. Therefore, we have created a sampleGlove.txt file within the docker container to act as a dummy GloVe model in place of a real one. This text file is formatted the exact same way as a Glove model is normally formatted.
 
-<ins>Running the Image: </ins>
+<ins> Build 1: Running the Image with Local Build: </ins>
 
-- In order to run the image on the container, run this command ``` docker run -it --rm -v $(pwd)/container_files:/container_files itsarunkv/motorease-arm /bin/bash ``` (be sure to use the correct "and" or "arm" image name in this command).
+- With these instructions, you will be able to run the Docker Image locally and propagate your changes to the Docker Container automatically. These set of instructions are for Windows WSL. 
 
-- This command will allow you to enter the container and use it as a terminal. This will allow you to run ```wget``` commands to download data to the container and modify any existing data within. 
+- This build uses the: glove.6B.100d from ```https://github.com/stanfordnlp/GloVe?tab=readme-ov-file#download-pre-trained-word-vectors```so please download the glove embedding here if you would like to use the same model.
+  - Other models can be used and to use those models please change line 47 in Code/MotorEase.py .
+  - This model was chosen because it simulated the same results as the original Docker Image. 
 
-- In order to run the project, navigate to the ```Code``` directory and run ``` python3 MotorEase.py ```. The python script will run and will take the data from the Data folder and the GloVe embeddings from the sampleGlove.txt file. The program will run and notify the user at every stage. Finally, the logs will show that an accessibility report has been generated, and can be viewed. They can be viewed in the AccessibilityReport.txt file. 
+- To build the image run:
+ ```bash
+ docker build -t motorease Code
+ ```
+
+- To run a container of the image please run the command below. This command mounts the code directory which allows developers to have their changes propagated to docker container automatically. 
+```bash
+docker run -it --rm -v $(pwd)/Data:/data -v $(pwd)/Code:/code -v $(pwd)/Output:/output --env DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix motorease
+``` 
+
+- To enter a container of the image without running the command to start to program:
+```bash
+docker run -it --rm -v $(pwd)/Data:/data -v $(pwd)/Code:/code -v $(pwd)/Output:/output --env DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix motorease /bin/bash
+``` 
+
+- To clean up the image:
+ ```bash
+ docker rmi motorease
+ ```
+
+- Note 1: Depending on the Glove embedding used, you may need over 64 GB of ram
+  - Docker image can easily be over 10 GB
+  - When the codes failed, all the memory is still there, meaning, every time you run a 10 GB big model and fail, you have 10 GB allocated ram not released
+
+- Note 2: The compilation is slow even with a 8-core CPU. So, you may experience a long delay when it comes to both running and building the program.
+
+<ins> Build 2: Running the Image within Docker: </ins>
+
+[Video Tutorial](https://drive.google.com/file/d/1FKK-Hn-CGmNpBthx0Z-T0SHbMVoSUvEp/view?usp=drive_link)
+
+***Step 1: Add the GloVe Embeddings Path***
+- Create an `embeddings` folder in the repository's root directory.
+- MotorEase requires glove embeddings to work and needs the download for the model. The model is large and not able to be hosted on GitHub. Please visit https://nlp.stanford.edu/projects/glove/ and download 1 of the 4 available options.
+- Add the Glove Embedding of your choice to the `embeddings` folder you created earlier.
+- Navigate to line **151** in `Code/MotorEase.py`, uncomment the line, update the txt file, and comment out the original line.
+
+***Step 2: Run the Docker Image***
+
+- Navigate to the root directory of `MotorEase_Smoothies`.
+- Use the following commands based on your platform. This command links the local `Code`, `Data`, and `embeddings` directories to the Docker container, ensuring changes in these directories reflect in the container.
+
+**MacOS/Linux**:
+```bash
+docker run -it -v $(pwd)/Code:/MotorEase-main/Code -v $(pwd)/embeddings:/MotorEase-main/embeddings -v $(pwd)/Data:/MotorEase-main/Data itsarunkv/motorease-arm /bin/bash
+```
+ 
+**PowerShell**:
+```bash
+docker run -it -v ${PWD}/Code:/MotorEase-main/Code -v ${PWD}/embeddings:/MotorEase-main/embeddings -v ${PWD}/Data:/MotorEase-main/Data itsarunkv/motorease-amd /bin/bash
+``` 
+
+**Command Prompt**:
+```bash
+docker run -it -v %CD%\Code:/MotorEase-main/Code -v %CD%\embeddings:/MotorEase-main/embeddings -v %CD%\Data:/MotorEase-main/Data itsarunkv/motorease-amd /bin/bash
+```
+
+- **Note**: Replace itsarunkv/motorease-arm with itsarunkv/motorease-amd if using an AMD-based system.
+
+- Now, any change in the `Data`, `Code`, and `embeddings` directories will show in the Docker container.
+
+- ***To test your data, just add the PNG and corresponding XML file to the `Data` folder.***
+
+***Step 3: Update the Scripts***
+- Uncomment the Docker method code in each of these files:
+  - `Code/MotorEase.py`
+  - `Code/detectors/Visual/TouchTarget.py`
+  - `Code/detectors/Visual/IconDistance.py`
+  - `Code/detectors/Visual/UIED-master/run_single.py`
+
+- Look for the *"Docker method"* comments in each file and uncomment those sections while commenting out the original method.
+
+***Step 4: Install Dependencies***
+
+- Once inside the container, install `matplotlib` using pip:
+```bash
+pip install matplotlib
+```
+
+***Step 5: Run the Project***
+
+- Enter the `Code` directory in the container and run:
+```bash
+ python3 MotorEase.py 
+```
+The script will:
+  1. Process data from the `Data` folder.
+  2. Use the GloVe embeddings file specified on line 68.
+  3. Generate an accessibility report and bar graphs for interactive and violating elements:
+     - `AccessibilityReport.txt`
+     - `violating_graph.png`
+     - `interactive_graph.png`
+     - `violating_vs_interactive.png`
+
+***Step 6: Copy Output Files to Local Machine***
+- Exit the container:
+    ```bash
+    exit
+    ```
+  - This should now take you back to the root directory of MotorEase_Smoothies.
+- Create a `Results` folder in the repository's root directory.
+- Copy the output files to your `Results` folder in the local directory:
+    ```bash
+    docker cp {container_id}:/MotorEase-main/AccessibilityReport.txt Results/
+    docker cp {container_id}:/MotorEase-main/violating_graph.png Results/
+    docker cp {container_id}:/MotorEase-main/interactive_graph.png Results/
+    docker cp {container_id}:/MotorEase-main/violating_vs_interactive.png Results/
+    ```
+- Check the `Results` folder for these files.
+
+<ins> Build 3: Python Environment: </ins>
+
+[Video Tutorial](https://drive.google.com/file/d/1sn_aZDEI6OwyvYYORG--hA1WdCgJUlfU/view?usp=sharing)
+- These set of instructions is if you would like to run the repository remotely using a Python Environment. 
+
+Versions compatible with MotorEase:
+- ```Python Version: 3.9.13```
+
+- ```Pip Version: 23.3.2```
+
+***Step 1: Updating the paths***
+
+Go to line 151 in the Code/MotorEase.py file and change the file path to the folder that holds your Glove Embeddings txt file. MotorEase requires glove embeddings to work, and needs the download for the model. The model is large and not able to be hosted on GitHub. Please visit https://nlp.stanford.edu/projects/glove/ and download 1 of the 4 available options.
+
+Go to each of the following files: motorease.py, icondistance.py, touchtarget.py, run_single.py and update the paths to the path to MotorEase root directory. You can quickly find the changes needed by ctrl+f: "Python Method". Comment out the current paths and replace the commented out path's with MotorEase Path
+
+Files to be updated:
+- `Code/MotorEase.py`: 2 paths 
+- `Code/detectors/Visual/IconDistance.py`: 3 paths
+- `Code/detectors/Visual/TouchTarget.py`: 5 paths
+- `Code/detectors/Visual/UIED-master/run_single.py`: 1 path
+
+**NOTE:** Using Environment: The Code directory will have a requirements.txt file that lists all required packages for MotorEase to run. 
+
+***Step 2: creating a new python environment***
+ ```bash
+ python3 -m venv .venv
+ ``` 
+***Step 3: Once your environment is created, activate it with this command:***
+ ```bash
+ source .venv/bin/activate
+ ```
+***Step 4: Use this command to download all of the dependencies into your virtual environment:***
+```bash
+pip install -r Code/requirements.txt
+``` 
+***Step 5: Once the requirements are installed and there are PNG and XML files in the Data folder, run MotorEase from the Code directory using this command:***
+ ```bash
+ cd Code/
+ python3 MotorEase.py
+ ```
+  
+- The output of either method will be a file with the Motor impairment accessibility guideline violations, AccessibilityReport.txt
+- The Graphed Data from the accessibility report is generated in 3 differnet Bar Graphs:
+     - violating_graph.png
+     - interactive_graph.png
+     - violating_vs_interactive.png
+  
+- If you would like to run MotorEase on your own screenshot/xml pair, remove existing data in the data folder and add PNG screenshots and their XML files from a single
+  application.
 
 <ins>Reproducing Full Paper Results:</ins>
 
@@ -48,25 +208,10 @@ The MotorEase code and data has been permanently archived on Zenodo at: (https:/
 
 - GloVe embeddings used: ```wget https://nlp.stanford.edu/data/glove.42B.300d.zip```
 
-- Please sneure that the Glove embedding is downloaded to the /MotorEase-main/Code/ folder. When you download your GloVe embedding file, rename it to sampleGlove.txt and delete the placeholder sampleGlove.txt file so that the code can use the real embeddings. The resulting file path for the GloVe embedding file should be: ```/MotorEase-main/Code/gloveSample.txt```
+- Please ensure that the Glove embedding is downloaded to the /MotorEase-main/Code/ folder. When you download your GloVe embedding file, rename it to sampleGlove.txt and delete the placeholder sampleGlove.txt file so that the code can use the real embeddings. The resulting file path for the GloVe embedding file should be: ```/MotorEase-main/Code/gloveSample.txt```
 
 - In order to load your own images, navigate to the Data folder in the container and delete the existing photos. Use the wget command to download your images into the directory so they may be used. 
-  
-<ins>Python Environment: </ins>
 
-- Go to line 107 in the MotorEase.py file and change the file path to the folder that holds the code and data folders
-  
-- Go to line 47 and add the file path for your Glove Embeddings txt file. MotorEase requires glove embeddings to work, and needs the download for the model. The model is large and not able to be hosted on GitHub. Please visit https://nlp.stanford.edu/projects/glove/ and download 1 of the 4 available options.
-- ```Python Version: 3.9.13```
-
-- ```Pip Version: 23.3.2```
-
-- Using Environment: The Code directory will have a requirements.txt file that lists all required packages for MotorEase to run. In your command line, create a new python environment: ``` python3 -m venv .venv``` Once your environment is created, activate it with this command: ```source .venv/bin/activate```. Use this command to download all of the dependencies into your virtual environment:  ```pip install -r requirements.txt```. Once the requirements are installed and there are PNG and XML files in the Data folder, run MotorEase using this command: ```python3 MotorEase.py```
-  
-- The output of either method will be a file with the Motor impairment accessibility guideline violations, AccessibilityReport.txt
-  
-- If you would like to run MotorEase on your own screenshot/xml pair, remove existing data in the data folder and add PNG screenshots and their XML files from a single
-  application.
 
 
 
